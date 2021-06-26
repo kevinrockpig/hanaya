@@ -58,10 +58,14 @@ public class ProductDaoImpl implements ProductDao{
 
 	
 	public List<Map<String, Object>> getPdList() {
-		String hql ="select new map(p.pd_id,p.pd_name) from product p ";
+		
+		StringBuilder sql = new StringBuilder();
+		sql.append("WITH pty AS (SELECT pt.pd_type_name name, pt.pd_type_id id FROM pd_type pt) ");
+		sql.append(" SELECT p.pd_id,p.pd_name,pty.name FROM product p ");
+		sql.append(" LEFT JOIN pty ON pty.id = p.pd_type_id ");
 		Session session = sessionFactory.getCurrentSession();
 //		List<Map<String, Object>> list = session.createNativeQuery(sql).list();
-		Query q = session.createQuery(hql);
+		Query q = session.createSQLQuery(sql.toString());
 		List<Map<String, Object>> map = q.list();
 
 		return map;

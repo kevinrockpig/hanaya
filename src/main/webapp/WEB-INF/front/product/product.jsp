@@ -8,7 +8,10 @@
 <title>Insert title here</title>
 </head>
 <body>
-
-${hanaya_index}
+<c:forEach items="${pd_list}" var="list" varStatus="ss">
+<c:forEach items="${list}" var="l">
+<c:out value="${l.value}"></c:out>
+</c:forEach><p>
+</c:forEach>
 </body>
 </html>
