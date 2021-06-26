@@ -2,13 +2,16 @@
 <beans xmlns="http://www.springframework.org/schema/beans"
 	xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
 	xmlns:context="http://www.springframework.org/schema/context"
+	xmlns:tx="http://www.springframework.org/schema/tx"
 	xmlns:mvc="http://www.springframework.org/schema/mvc"
 	xsi:schemaLocation="http://www.springframework.org/schema/beans
        http://www.springframework.org/schema/beans/spring-beans.xsd
        http://www.springframework.org/schema/context
        https://www.springframework.org/schema/context/spring-context.xsd
        http://www.springframework.org/schema/mvc
-       https://www.springframework.org/schema/mvc/spring-mvc.xsd">
+       https://www.springframework.org/schema/mvc/spring-mvc.xsd
+       http://www.springframework.org/schema/tx 
+       http://www.springframework.org/schema/tx/spring-tx.xsd">
 
 	<!-- 自動掃描包，讓指定包的註解生效，由IOC容器統一管理 -->
 	<context:component-scan
@@ -32,13 +35,27 @@
 		<property name="suffix" value=".jsp" />
 	</bean>
 	
-	<bean id="dataSource" class="org.springframework.jdbc.datasource.DriverManagerDataSource">
-		<property name="driverClassName" value="com.mysql.jdbc.Driver" />
-		<property name="url" value="jdbc:mysql://localhost:3306" />
-		<property name="username" value="Huan" />
-		<property name="password" value="3661346pig" />
-	</bean>
+<!-- 	<bean id="dataSource" class="org.springframework.jdbc.datasource.DriverManagerDataSource"> -->
+	<bean id="hikariConfig" class="com.zaxxer.hikari.HikariConfig">
+<!-- 		<property name="driverClassName" value="com.mysql.jdbc.Driver" /> -->
 
+		<property name="driverClassName" value="com.mysql.jdbc.Driver" />
+		<property name="JdbcUrl" value="jdbc:mysql://localhost:3306/hanaya" />
+		<property name="username" value="Huan" />
+		<property name="password" value="Huan3661346" />
+		
+		<property name="autoCommit" value="true" />
+		<property name="minimumIdle" value="10" />
+		<property name="maximumPoolSize" value="25" />	
+		<property name="idleTimeout" value="30000" />
+<!-- 		<property name="poolName" value="springHikariCP" /> -->
+		<property name="poolName" value="ExpendHikariCP" />
+		<property name="maxLifetime" value="1800000" />
+		<property name="connectionTimeout" value="30000" />
+	</bean>
+	<bean id="dataSource" class="com.zaxxer.hikari.HikariDataSource" destroy-method="close">
+	    <constructor-arg ref="hikariConfig" />
+	</bean>
 	<bean id="sessionFactory" class="org.springframework.orm.hibernate5.LocalSessionFactoryBean">
 		<property name="dataSource" ref="dataSource" />	
 		<property name="packagesToScan" value="com.hanaya.model" />	
@@ -51,9 +68,10 @@
 			</props>
 		</property>
 	</bean>		
-	
+	<tx:annotation-driven />
   <bean id="transactionManager"
     class="org.springframework.orm.hibernate5.HibernateTransactionManager">
     <property name="sessionFactory" ref="sessionFactory"/>
-  </bean>				 
+  </bean>
+
 </beans>
