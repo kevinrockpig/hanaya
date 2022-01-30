@@ -2,10 +2,15 @@ package com.hanaya.model;
 
 import java.util.Date;
 
+import javax.persistence.CascadeType;
 import javax.persistence.Column;
 import javax.persistence.Entity;
+import javax.persistence.FetchType;
 import javax.persistence.Id;
+import javax.persistence.JoinColumn;
+import javax.persistence.ManyToOne;
 import javax.persistence.Table;
+
 
 @Entity(name = "product")
 @Table(name = "product")
@@ -34,8 +39,18 @@ public class Product extends baseModel{
 	private Date start_date;
 	@Column(name = "end_date")
 	private Date end_date;
+	@ManyToOne(cascade = CascadeType.ALL,fetch = FetchType.LAZY)
+	@JoinColumn(name = "pd_type_id",insertable = false, updatable = false)
+	private PdType pdType;
 	
 	
+
+	public PdType getPdType() {
+		return pdType;
+	}
+	public void setPdType(PdType pdType) {
+		this.pdType = pdType;
+	}
 	public Integer getPd_id() {
 		return pd_id;
 	}

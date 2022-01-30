@@ -17,17 +17,16 @@ public interface ProductDao {
 	
 	/*
 	 * 依商品編號取得詳細
-	 * @author Huan 2021-6-19
+	 * @author Huan 2021-6-28
 	 * @param  pd_id <商品編號>
-	 * @return Product
+	 * @return List<Map<String, Object>>
 	 */	
-	public Map<String, Object> getPdMap(Integer pd_id);
+	public List<Map<String, Object>> getPdInfoById(Integer pd_id);
 	
 	/*
-	 * 依商品編號取得詳細
+	 * 商品列表
 	 * @author Huan 2021-6-19
-	 * @param  pd_id <商品編號>
-	 * @return Product
+	 * @return List<Map<String, Object>>
 	 */	
 	public List<Map<String, Object>> getPdList();
 }

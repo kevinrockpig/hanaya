@@ -1,4 +1,7 @@
 /.settings/  
+/build
+classes
+/
 /target/  
 # built application files  
 *.apk  

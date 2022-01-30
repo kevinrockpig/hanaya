@@ -28,9 +28,9 @@ public class ProductServiceImpl implements ProductService{
 	
 	@Override
 	@Transactional
-	public Map<String, Object> getPdMap(Integer pd_id) {
+	public List<Map<String, Object>> getPdInfoById(Integer pd_id) {
 		// TODO Auto-generated method stub
-		return productDao.getPdMap(pd_id);
+		return productDao.getPdInfoById(pd_id);
 	}
 
 
