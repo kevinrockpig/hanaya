@@ -24,7 +24,7 @@
 		必須向上下文中註冊DefaultAnnotationHandlerMapping 和一個AnnotationMethodHandlerAdapter例項 
 		這兩個例項分別在類級別和方法級別處理。 而annotation-driven配置幫助我們自動完成上述兩個例項的注入 -->
 	<mvc:annotation-driven />
-
+	<mvc:resources location="/img/" mapping="/img/**"/>  
 	<!-- 檢視解析器 -->
 	<bean
 		class="org.springframework.web.servlet.view.InternalResourceViewResolver"

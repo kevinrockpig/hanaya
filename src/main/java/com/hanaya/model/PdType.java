@@ -1,13 +1,18 @@
 package com.hanaya.model;
 
+import java.util.Set;
+
+import javax.persistence.CascadeType;
 import javax.persistence.Column;
 import javax.persistence.Entity;
+import javax.persistence.FetchType;
 import javax.persistence.Id;
+import javax.persistence.OneToMany;
 import javax.persistence.Table;
 
 @Entity
 @Table(name = "pd_type")
-public class pd_type {
+public class PdType {
 	
 	@Id
 	@Column(name = "pd_type_id")
@@ -18,8 +23,16 @@ public class pd_type {
 	private Integer pd_type_up_id;
 	@Column(name = "pd_description")
 	private String pd_description;
+	@OneToMany(cascade=CascadeType.PERSIST,fetch=FetchType.LAZY,mappedBy="pdType")
+	private Set<Product> products;
 	
 	
+	public Set<Product> getProducts() {
+		return products;
+	}
+	public void setProducts(Set<Product> products) {
+		this.products = products;
+	}
 	public Integer getPd_type_id() {
 		return pd_type_id;
 	}

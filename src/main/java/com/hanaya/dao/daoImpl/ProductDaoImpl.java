@@ -1,11 +1,13 @@
 package com.hanaya.dao.daoImpl;
 
+import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
 import org.hibernate.Session;
 import org.hibernate.SessionFactory;
+import org.hibernate.criterion.CriteriaSpecification;
 import org.hibernate.query.Query;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Repository;
@@ -41,34 +43,41 @@ public class ProductDaoImpl implements ProductDao{
 
 	
 	@Override
-	public Map<String, Object> getPdMap(Integer pd_id) {
-		// TODO Auto-generated method stub
-		Map<String, Object> map = new HashMap();
-//		String sql ="SELECT p.* FROM product p WHERE p.pd_id = :pd_id ";
-//		Session session = sessionFactory.openSession();
-//		List list = session.createNativeQuery(sql).setParameter("pd_id", pd_id).list();
-//				
-//		if(list!=null&&list.size()>0) {		
-//			map = (Map) list.get(0);
-//		}
+	public List<Map<String, Object>> getPdInfoById(Integer prod_id) {
+		List<Map<String,Object>> list = new ArrayList<Map<String, Object>>();
+		StringBuilder sql = new StringBuilder();
+		sql.append("WITH pty AS (SELECT pt.pd_type_name name, pt.pd_type_id id FROM pd_type pt) ");
+		sql.append(" SELECT p.pd_id,p.pd_name, p.pd_status, p.pd_price, p.pd_sales, p.pd_description, ");
+		sql.append(" p.pd_stock, p.start_date, p.end_date, pty.id type_id, pty.name type_name FROM product p ");
+		sql.append(" LEFT JOIN pty ON pty.id = p.pd_type_id where p.pd_id =:prod_id ");
 		
-		return map;
+		Session session = sessionFactory.getCurrentSession();
+		Query q = session.createSQLQuery(sql.toString());
+		q.setParameter("prod_id", prod_id);
+		q.setResultTransformer(CriteriaSpecification.ALIAS_TO_ENTITY_MAP);
+		list = q.list();
+		return list;
 	}
 	
 
 	
+//	@SuppressWarnings("deprecation")
 	public List<Map<String, Object>> getPdList() {
-		
+		List<Map<String, Object>> list = new ArrayList<Map<String, Object>>();
 		StringBuilder sql = new StringBuilder();
 		sql.append("WITH pty AS (SELECT pt.pd_type_name name, pt.pd_type_id id FROM pd_type pt) ");
-		sql.append(" SELECT p.pd_id,p.pd_name,pty.name FROM product p ");
+		sql.append(" SELECT p.pd_id,p.pd_name, p.pd_status, p.pd_price, p.pd_sales, p.pd_description, ");
+		sql.append(" p.pd_stock, p.start_date, p.end_date, pty.id type_id, pty.name type_name FROM product p ");
 		sql.append(" LEFT JOIN pty ON pty.id = p.pd_type_id ");
 		Session session = sessionFactory.getCurrentSession();
 //		List<Map<String, Object>> list = session.createNativeQuery(sql).list();
 		Query q = session.createSQLQuery(sql.toString());
-		List<Map<String, Object>> map = q.list();
+		q.setResultTransformer(CriteriaSpecification.ALIAS_TO_ENTITY_MAP);
+		list = q.list();
+//		System.out.println("sql = "+sql);
+//		System.out.println("list  =" + map);
 
-		return map;
+		return list;
 	}
 
 }
